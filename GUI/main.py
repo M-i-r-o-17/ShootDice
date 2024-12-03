@@ -1,4 +1,5 @@
 from Engine.GameObject import GameObject
+from Engine.Sprite import Sprite
 import pygame
 import sys
 
@@ -18,9 +19,9 @@ dices = [
 ]
 
 for i in range(6):
-    dices[i].imagePath = f"img/{i+1}.png"
+    dices[i].sprite = Sprite(f"img/{i+1}.png", dices[i].size)
     dices[i].color = WHITE
-    objects.append(dices[i])
+
 
 
 def Start():

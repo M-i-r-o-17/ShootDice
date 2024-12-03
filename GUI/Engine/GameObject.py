@@ -1,6 +1,7 @@
 import pygame
 
 from Engine.Transform import Transform
+from Engine.Sprite import Sprite
 
 class GameObject(Transform):
 
@@ -8,36 +9,20 @@ class GameObject(Transform):
         Transform.__init__(self, x, y, width, height)
         self.tag   = "Untaget"
 
-        self.imagePath = "None"
-        self.image = None
-        self.failLoadImage = False
+        self.sprite = None
 
+        self.drawRect = True
         self.color = (255, 0, 255)
-
-    def DrawRect(self):
-        self.surface.fill((0, 0, 0))
-        pygame.draw.rect(self.surface, self.color, self.base)
         
     def Draw(self, surface):
 
-        if self.image == None and self.failLoadImage == False:
+        self.surface.fill((0, 0, 0))
 
-            if self.imagePath == "None":
-                self.Warning("Image path is empty!")
-                self.failLoadImage = True
-            else:
-                self.image = pygame.image.load(self.imagePath).convert_alpha()
-
-                if not(self.image == None):
-                    self.image = pygame.transform.scale(self.image, (self.width, self.height))
-                else:
-                    self.Error(1, f"Do not find file with path \"{self.imagePath}\"")
-                    self.failLoadImage = True
-
-        self.DrawRect()
+        if self.drawRect:
+            pygame.draw.rect(self.surface, self.color, self.base)
         
-        if not(self.image == None):
-            self.surface.blit(self.image, self.image.get_rect())
+        if(self.sprite != None):
+            self.sprite.Draw(self.surface)
 
         if self.DEBUG:
             pygame.draw.rect(self.surface, (255, 0, 0), self.centerPoint)

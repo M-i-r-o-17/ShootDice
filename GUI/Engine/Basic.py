@@ -13,6 +13,9 @@ class Basic():                                            # Главный кл�
 
         self.layer     = 0                                # Слой сортировки
 
+        self.position = Vector2(0, 0)                     # Координаты по умолчанию
+        self.size     = Vector2(64, 64)
+
     def Log(self, message):
         if self.DEBUG: message = self.DEBUG + " " + message
         print(message)
@@ -53,6 +56,7 @@ class Vector2():
     
     def distance(self, vector):
         return math.sqrt((vector.x - self.x)**2 + (vector.y - self.y) ** 2)
+    
     @property
     def right(self):
         return Vector2(1, 0)
@@ -68,3 +72,7 @@ class Vector2():
     @property
     def zero(self):
         return Vector2(0, 0)
+    
+    @property
+    def xy(self):
+        return (self.x, self.y)
