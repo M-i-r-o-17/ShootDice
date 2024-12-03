@@ -39,27 +39,27 @@ class Position(Basic):
         else: return False
     
     def OnCollision(self, position):
-        if   self.center.distance(position.right) <= self.width / 2:  return True
-        elif self.center.distance(position.left)  <= self.width / 2:  return True
-        elif self.center.distance(position.top)   <= self.height / 2: return True
-        elif self.center.distance(position.bottom)   <= self.height / 2: return True
+        if   self.center.distance(position.right) <= self.width // 2:  return True
+        elif self.center.distance(position.left)  <= self.width // 2:  return True
+        elif self.center.distance(position.top)   <= self.height // 2: return True
+        elif self.center.distance(position.bottom)   <= self.height // 2: return True
         else: return False
     
     @property
     def left(self):
-        return Vector2(self.position.x, self.position.y + self.height / 2)
+        return Vector2(self.position.x, self.position.y + self.height // 2)
 
     @property
     def right(self):
-        return Vector2(self.position.x + self.width, self.position.y + self.height / 2)
+        return Vector2(self.position.x + self.width, self.position.y + self.height // 2)
 
     @property
     def top(self):
-        return Vector2(self.position.x + self.width / 2, self.position.y)
+        return Vector2(self.position.x + self.width // 2, self.position.y)
 
     @property
     def bottom(self):
-        return Vector2(self.position.x + self.width / 2, self.position.y + self.height)
+        return Vector2(self.position.x + self.width // 2, self.position.y + self.height)
 
     @property
     def width(self):
@@ -71,4 +71,4 @@ class Position(Basic):
 
     @property
     def center(self):
-        return Vector2(self.position.x + self.width / 2, self.position.y + self.height / 2)
+        return Vector2(self.position.x + self.width // 2, self.position.y + self.height // 2)

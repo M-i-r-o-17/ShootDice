@@ -5,7 +5,7 @@ from Engine.Basic import *
 
 class Sprite(Basic):
 
-    def __init__(self, path:str, size:Vector2 = Vector2(64, 64), convert:int = 0, color = (255, 0, 255)):
+    def __init__(self, path:str, size:Vector2 = Vector2(64, 64), position:Vector2 = (0,0), convert:int = 0, color = (255, 0, 255)):
 
         Basic.__init__(self)
 
@@ -13,6 +13,7 @@ class Sprite(Basic):
         self.image = None
         self.convert = convert
         self.size = size
+        self.position = position
 
         try:
             if convert == 0:
@@ -27,11 +28,17 @@ class Sprite(Basic):
 
         self.image = pygame.transform.scale(image, size.xy)
 
+    @property
+    def pos(self): return self.position.xy
+
+    def Resize(self, size):
+        self.image = pygame.transform.scale(self.image, size.xy)
+
     def Draw(self, surface):
 
         if self.faild: return
 
-        surface.blit(self.image, (self.position.x, self.position.y))
+        surface.blit(self.image, self.pos)
 
     def LoadImage(self, path):
         try:

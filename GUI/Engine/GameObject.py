@@ -5,7 +5,7 @@ from Engine.Sprite import Sprite
 
 class GameObject(Transform):
 
-    def __init__(self,x, y, width, height, type = "Rect", surface = None):
+    def __init__(self,x, y, width = 64, height = 64, type = "Rect", surface = None):
         Transform.__init__(self, x, y, width, height)
         self.tag   = "Untaget"
 

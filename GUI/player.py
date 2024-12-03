@@ -105,6 +105,6 @@ class Player():
 
                 self.zone[i][col] = self.randomNumber
 
-                return True
+                return i
 
-        return False
+        return -1
