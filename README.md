@@ -17,6 +17,10 @@
     - (x + x) * 2 при двух одинаковых костях
     - (x + x + x) * 3 при трёх одинаковых костях
 
+  Простая таблица значений
+  | Выповшая кость | Кол-во костей в столбце |
+  | --- | 1 | 2 | 3 |
+
 ## Вспомогательная программа
 
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=M-i-r-o-17&repo=ConverterData)](https://github.com/M-i-r-o-17/ConverterData)
