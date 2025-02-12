@@ -22,24 +22,32 @@ class Bot(Player):
 
         self.difficulty = self.__difficulty[difficulty]
 
-    def __easy(self, enemy):
+    def __easy(self, enemy) -> None:
+
+        while True:
+            num = randint(0, 2)
+
+            if self.add(num):
+                enemy.check_and_remove(self.curret_number, num)
+                break
+
+        return None
+
+    def __medium(self, enemy) -> None:
         pass
 
-    def __medium(self, enemy):
+    def __hard(self, enemy) -> None:
         pass
 
-    def __hard(self, enemy):
-        pass
-
-    def step(self, enemy):
+    def step(self, enemy) -> None:
 
         self.curret_number = self.random_number
         enemy.curret_number = ""
 
         Basic.clear_console()
 
-        enemy.display()
         self.display()
+        enemy.display()
 
         if self.difficulty == "Easy":
             self.__easy(enemy)
