@@ -1,108 +1,330 @@
 from random import randint
 from time import sleep
-class Player():
+from basic import Basic
+
+
+class Player:
+    """Базовый класс, реализующий основные механики игры"""
 
     def __init__(self, name):
 
-        self.name = name                            # Ник игрока
-        self.zone =  [[0,0,0], [0,0,0], [0,0,0]]    # Игровое поле
-        self.randomNumber = 0                       # Последнее случайное число
+        self.name = name
+
+        self.zone = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+
+        self.random_number = 0
+        self.curret_number = 0
+
         self.select = False
+        self.is_top_zone = False
         self.debug = True
 
     @property
-    def one(self):      return self.zone[0][0]      # 1
+    def one(self) -> int:
+        """Кость первой ячейки"""
+        return self.zone[0][0]  # 1
+
     @property
-    def two(self):      return self.zone[0][1]      # 2
+    def two(self) -> int:
+        """Кость второй ячейки"""
+        return self.zone[0][1]  # 2
+
     @property
-    def three(self):    return self.zone[0][2]      # 3
+    def three(self) -> int:
+        """Кость третей ячейки"""
+        return self.zone[0][2]  # 3
+
     @property
-    def four(self):     return self.zone[1][0]      # 4
+    def four(self) -> int:
+        """Кость четвертой ячейки"""
+        return self.zone[1][0]  # 4
+
     @property
-    def five(self):     return self.zone[1][1]      # 5
+    def five(self) -> int:
+        """Кость пятой ячейки"""
+        return self.zone[1][1]  # 5
+
     @property
-    def six(self):      return self.zone[2][2]      # 6
+    def six(self) -> int:
+        """Кость шестой ячейки"""
+        return self.zone[2][2]  # 6
+
     @property
-    def seven(self):    return self.zone[2][0]      # 7
+    def seven(self) -> int:
+        """Кость седьмой ячейки"""
+        return self.zone[2][0]  # 7
+
     @property
-    def eight(self):    return self.zone[2][1]      # 8
+    def eight(self) -> int:
+        """Кость восьмой ячейки"""
+        return self.zone[2][1]  # 8
+
     @property
-    def nine(self):     return self.zone[2][2]      # 9
+    def nine(self) -> int:
+        """Кость девятой ячейки"""
+        return self.zone[2][2]  # 9
+
     @property
-    def random(self):   return randint(1,6)         # Случайное число на кости
-    
+    def random(self) -> int:
+        """Случайное число от 1 до 6"""
+        return randint(1, 6)  # Случайное число (1-6)
+
     @property
-    def isEnd(self):                                # Заполнено ли поле
+    def is_end(self) -> bool:
+        """Переменная проверяющая заполненость поля
+
+        Returns:
+            bool: True - Поле заполнено False - Поле не заполнено
+        """
+        answer = True
 
         for row in self.zone:
-            for num in row:
-                if num == 0: return False
+            if 0 in row:
+                answer = False
 
-        return True
-    
+        return answer
+
     @property
-    def score(self):                                # Общий рекорд игрока
-        score = 0
+    def score(self) -> int:
+        """Переменная отслеживающая текущий результат поля
 
-        for i in range(3): score += self.ScoreCol(i)
+        Returns:
+            int: Значение всех костей
+        """
+        score: int = 0
+        for coloum in range(3):
+            score += self.score_col(coloum)
+        return score
+
+    def score_col(self, coloum: int) -> int:
+        """Функция подсчёта конкретной колонуи
+
+        Args:
+            coloum (int): Колонка, чей счёт нужно посчитать
+
+        Returns:
+            int: Количесвто очков в колонке
+        """
+        score: int = 0
+
+        if self.zone[0][coloum] == self.zone[1][coloum] == self.zone[2][coloum]:
+            score = (self.zone[0] * 3) * 3
+        elif self.zone[0][coloum] == self.zone[1][coloum] and not (
+            self.zone[1][coloum] == self.zone[2][coloum]
+        ):
+            score = (self.zone[0][coloum] * 2) * 2
+        elif self.zone[0][coloum] == self.zone[2][coloum] and not (
+            self.zone[1][coloum] == self.zone[2][coloum]
+        ):
+            score = (self.zone[0][coloum] * 2) * 2
+        elif self.zone[1][coloum] == self.zone[2][coloum] and not (
+            self.zone[0][coloum] == self.zone[1][coloum]
+        ):
+            score = (self.zone[0][coloum] * 2) * 2
+        else:
+            score = self.zone[0][coloum] + self.zone[1][coloum] + self.zone[2][coloum]
 
         return score
 
-    def CheckAndRemove(self, value:int, col:int):  # Проверяем и удаляем одинаковые числа из столбца
+    def check_and_remove(self, value: int, coloum: int) -> None:
+        """Функция для проверки в столбце похожих костей
 
-        for i in range(3):
-            if self.zone[i][col] == value: self.zone[i][col] = 0
+        Args:
+            value (int): Значение кости
+            coloum (int): Столбец
+        """
+        for row in range(3):
+            if self.zone[row][coloum] == value:
+                self.zone[row][coloum] = 0
 
-        self.Normolized(col)
+        self.normolized(coloum)
 
-    def CheckCorrect(self, col:int):                # Проверяем последовательность в столбце
+        return None
 
-        if self.zone[0][col] == 0 and self.zone[1][col] == 0 and self.zone[2][col] == 0: return False
-        elif self.zone[0][col] > 0 and self.zone[1][col] == 0 and self.zone[2][col] == 0: return False
-        elif self.zone[0][col] > 0 and self.zone[1][col] > 0 and self.zone[2][col] == 0: return False
-        elif self.zone[0][col] > 0 and self.zone[1][col] > 0 and self.zone[2][col] > 0: return False
-        else: return True
+    def check_correct(self, coloum: int) -> bool:
+        """Функция для проверки корректности отображения
 
-    def Normolized(self, col:int):                  # Преводим столбец к нужной форме
+        Args:
+            coloum (int): Столбец, который проверяем
 
-        while self.CheckCorrect(col):
+        Returns:
+            False: Если всё расположенно в парвельной последовательности. Сортировка не требуется
+            True:  Если порядок нарушен. Требуется сортировка
+        """
+        if self.is_top_zone:
+            if (
+                self.zone[0][coloum] == 0
+                and self.zone[1][coloum] == 0
+                and self.zone[2][coloum] == 0
+            ):
+                return False
+            elif (
+                self.zone[0][coloum] == 0
+                and self.zone[1][coloum] == 0
+                and self.zone[2][coloum] > 0
+            ):
+                return False
+            elif (
+                self.zone[0][coloum] == 0
+                and self.zone[1][coloum] > 0
+                and self.zone[2][coloum] > 0
+            ):
+                return False
+            elif (
+                self.zone[0][coloum] > 0
+                and self.zone[1][coloum] > 0
+                and self.zone[2][coloum] > 0
+            ):
+                return False
+            else:
+                return True
+        else:
+            if (
+                self.zone[0][coloum] == 0
+                and self.zone[1][coloum] == 0
+                and self.zone[2][coloum] == 0
+            ):
+                return False
+            elif (
+                self.zone[0][coloum] > 0
+                and self.zone[1][coloum] == 0
+                and self.zone[2][coloum] == 0
+            ):
+                return False
+            elif (
+                self.zone[0][coloum] > 0
+                and self.zone[1][coloum] > 0
+                and self.zone[2][coloum] == 0
+            ):
+                return False
+            elif (
+                self.zone[0][coloum] > 0
+                and self.zone[1][coloum] > 0
+                and self.zone[2][coloum] > 0
+            ):
+                return False
+            else:
+                return True
+
+    def normolized(self, coloum: int) -> None:
+        """Преводит столбец к нужному виду
+
+        Args:
+            coloum (int): столбец
+        """
+        while self.check_correct(coloum):
             for i in range(3):
-                if i + 1 <= 2 and self.zone[i][col] == 0:
-                    self.zone[i][col] = self.zone[i+1][col] 
-                    self.zone[i+1][col] = 0
+                if self.is_top_zone:
+                    if i - 1 >= 0 and self.zone[i][coloum] == 0:
+                        self.zone[i][coloum] = self.zone[i - 1][coloum]
+                        self.zone[i - 1][coloum] = 0
+                else:
+                    if i + 1 <= 2 and self.zone[i][coloum] == 0:
+                        self.zone[i][coloum] = self.zone[i + 1][coloum]
+                        self.zone[i + 1][coloum] = 0
 
-    def ScoreCol(self, col:int):                    # Вычесляем счётчик столбца
+        return None
 
-        if self.zone[0][col] == self.zone[1][col] and self.zone[1][col] == self.zone[2][col]: return (self.zone[0][col] + self.zone[1][col] + self.zone[1][col]) * 3
-
-        if self.zone[0][col] == self.zone[1][col] and not(self.zone[1][col] == self.zone[2][col]): return (self.zone[0][col] + self.zone[1][col]) * 2 + self.zone[2][col]
-        if self.zone[0][col] == self.zone[2][col] and not(self.zone[1][col] == self.zone[2][col]): return (self.zone[0][col] + self.zone[2][col]) * 2 + self.zone[1][col]
-
-        if self.zone[1][col] == self.zone[2][col] and not(self.zone[0][col] == self.zone[1][col]): return (self.zone[1][col] + self.zone[2][col]) * 2 + self.zone[0][col]
-        return self.zone[0][col] + self.zone[1][col] + self.zone[2][col]
-    
-    def Print(self):                                # Выводим данные игрока на экран
+    def display(self) -> None:
+        """Функция отбражения информации о классе в терминале"""
         print("*" * 48)
-        print(f"* [ {self.one}  ][ {self.two}  ][ {self.three}  ] * Nick: {self.name[0:15]} " + " " * (16 - len(self.name)) +" *")
-        print(f"* [ {self.four}  ][ {self.five}  ][ {self.six}  ] * "  + f"Curret: {self.randomNumber}" + " " * 15 +"*" )
-        print(f"* [ {self.seven}  ][ {self.eight}  ][ {self.nine}  ] * " +f"Your step: {self.select}"+ " " * 8 +"*") 
+        print(
+            f"* [ {self.one}  ][ {self.two}  ][ {self.three}  ] * Nick: {self.name[0:15]} "
+            + " " * (16 - len(self.name))
+            + " *"
+        )
+        print(
+            f"* [ {self.four}  ][ {self.five}  ][ {self.six}  ] * "
+            + f"Curret: {self.curret_number}"
+            + " " * 15
+            + "*"
+        )
+        print(
+            f"* [ {self.seven}  ][ {self.eight}  ][ {self.nine}  ] * "
+            + f"Your step: {self.select}"
+            + " " * 8
+            + "*"
+        )
         print("* " + "|" * 44 + " *")
-        print(f"* ",end='')
+        print("* ", end="")
         for i in range(3):
-            value = self.ScoreCol(i)
-            if(value < 10): print(f"[ {value}  ]",end='')
-            else: print(f"[ {value} ]", end='')
-        print(' * ' + f"Score: {self.score} " + " " * (24 -len(f"Score: {self.score} ")) + "*")
+            value = self.score_col(i)
+            if value < 10:
+                print(f"[ {value}  ]", end="")
+            else:
+                print(f"[ {value} ]", end="")
+        print(
+            " * "
+            + f"Score: {self.score} "
+            + " " * (24 - len(f"Score: {self.score} "))
+            + "*"
+        )
         print("*" * 48)
 
-    def AddNumber(self, col:int):                   # Добовляем число на поле
+        return None
+
+    def add(self, coloum: int) -> bool:
+        """Функция для добовления новой кости
+
+        Args:
+            coloum (int): Колонка в которую нужно добавить
+
+        Returns:
+            True: Если получилось добавить кость
+            False: Если нет свободного места под кость
+        """
 
         for i in range(3):
 
-            if self.zone[i][col] == 0:
+            if self.zone[i][coloum] == 0:
 
-                self.zone[i][col] = self.randomNumber
+                self.zone[i][coloum] = self.curret_number
 
                 return True
 
         return False
+
+    def step(self, enemy) -> None:
+        """Функция выполнения хода
+
+        Args:
+            enemy (Player): Второй игрок
+        """
+
+        self.curret_number = self.random_number
+        enemy.curret_number = ""
+
+        Basic.clear_console()
+
+        enemy.display()
+        self.display()
+
+        while_step = 500
+
+        while while_step >= 0:
+
+            while_step -= 1
+
+            if while_step == 0:
+                print("[Error 0] Закончились попытки ввода")
+                return None
+
+            try:
+                num = int(input("Выберите колоннку(1,2,3): "))
+            except ValueError:
+                print("[Error 1] Я не знаю что это!")
+                num = 9
+
+            if not (num == 1 or num == 2 or num == 3):
+                continue
+
+            num = num - 1
+
+            if self.add(num):
+                enemy.check_and_remove(self.curret_number, num)
+                break
+
+        self.select = False
+        enemy.select = True
+
+        return None
