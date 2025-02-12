@@ -17,7 +17,7 @@ class Player:
 
         self.select = False
         self.is_top_zone = False
-        self.debug = True
+        self.debug = False
 
     @property
     def one(self) -> int:
@@ -99,32 +99,32 @@ class Player:
     def score_col(self, coloum: int) -> int:
         """Функция подсчёта конкретной колонуи
 
-        Args:
+        Args:1
             coloum (int): Колонка, чей счёт нужно посчитать
 
         Returns:
             int: Количесвто очков в колонке
         """
-        score: int = 0
 
         if self.zone[0][coloum] == self.zone[1][coloum] == self.zone[2][coloum]:
-            score = (self.zone[0] * 3) * 3
-        elif self.zone[0][coloum] == self.zone[1][coloum] and not (
-            self.zone[1][coloum] == self.zone[2][coloum]
-        ):
-            score = (self.zone[0][coloum] * 2) * 2
-        elif self.zone[0][coloum] == self.zone[2][coloum] and not (
-            self.zone[1][coloum] == self.zone[2][coloum]
-        ):
-            score = (self.zone[0][coloum] * 2) * 2
-        elif self.zone[1][coloum] == self.zone[2][coloum] and not (
+            return self.zone[0][coloum] * 9
+        elif (
             self.zone[0][coloum] == self.zone[1][coloum]
+            and self.zone[0][coloum] != self.zone[2][coloum]
         ):
-            score = (self.zone[0][coloum] * 2) * 2
+            return self.zone[0][coloum] * 4 + self.zone[2][coloum]
+        elif (
+            self.zone[0][coloum] == self.zone[2][coloum]
+            and self.zone[0][coloum] != self.zone[1][coloum]
+        ):
+            return self.zone[0][coloum] * 4 + self.zone[1][coloum]
+        elif (
+            self.zone[2][coloum] == self.zone[1][coloum]
+            and self.zone[2][coloum] != self.zone[0][coloum]
+        ):
+            return self.zone[2][coloum] * 4 + self.zone[0][coloum]
         else:
-            score = self.zone[0][coloum] + self.zone[1][coloum] + self.zone[2][coloum]
-
-        return score
+            return self.zone[0][coloum] + self.zone[1][coloum] + self.zone[2][coloum]
 
     def check_and_remove(self, value: int, coloum: int) -> None:
         """Функция для проверки в столбце похожих костей
@@ -290,14 +290,6 @@ class Player:
         Args:
             enemy (Player): Второй игрок
         """
-
-        self.curret_number = self.random_number
-        enemy.curret_number = ""
-
-        Basic.clear_console()
-
-        enemy.display()
-        self.display()
 
         while_step = 500
 

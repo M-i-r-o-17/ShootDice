@@ -1,186 +1,104 @@
 import os
 from time import sleep
 from player import Player
-from random import randint
+from bot import Bot
+from basic import Basic
 
-gameLoop = True
-gameSelect = 0
 
-def Clear():
-    if os.name == "nt": os.system("cls")
-    else: os.system("clear")
+def player_vs_bot() -> None:
+    """Функция запускающая игру против бота"""
 
-def MainMenu(message = False):
+    player1 = Player(input("Введите ник игрока: "))
+    bot = Bot()
 
-    Clear()
+    return game(bot, player1)
 
-    if message:
+
+def player_vs_player() -> None:
+    """Функция запускающая игру для 2х игроков"""
+
+    player1 = Player(input("Введите ник игрока: "))
+    player2 = Player(input("Введите ник игрока: "))
+
+    return game(player1, player2)
+
+
+def game(p1: Player, p2: Player) -> None:
+    """Основная функция игры
+
+    Args:
+        p1 (Player): Первый игрок
+        p2 (Player): Второй игрок
+    """
+    who_first = Basic.randint(1, 2)
+
+    if who_first == 1:
+        p1.select = True
+        p2.select = False
+
+    p1.is_top_zone = True
+    p2.is_top_zone = False
+
+    while not p1.is_end and not p2.is_end:
+
+        p1.curret_number = p1.random if p1.select else ""
+        p2.curret_number = p2.random if p2.select else ""
+
+        Basic.clear_console()
+        p1.display()
+        p2.display()
+
+        if p1.select:
+            p1.step(p2)
+        else:
+            p2.step(p1)
+
+        sleep(1)
+
+    for timer in range(5, 0, -1):
+        Basic.clear_console()
+        p1.display()
+        p2.display()
+
+        if p1.score > p2.score:
+            print(p1.name)
+        else:
+            print(p2.name)
+
+        print(f"Выход через: {timer}...")
+
+        sleep(1)
+
+
+if __name__ == "__main__":
+    GAME_LOOP = True
+    MAIN_MENU_SELECT = 0
+    ERRORS = []
+
+    while GAME_LOOP:
+
+        if MAIN_MENU_SELECT == 1:
+            player_vs_bot()
+            MAIN_MENU_SELECT = 0
+        elif MAIN_MENU_SELECT == 2:
+            player_vs_player()
+            MAIN_MENU_SELECT = 0
+        elif MAIN_MENU_SELECT == 3:
+            GAME_LOOP = False
+            continue
+        else:
+            ERRORS.append("[Error 2] Нет такого пункта меню")
+
+        Basic.clear_console()
+
+        for error in ERRORS:
+            print("**************************")
+            print(error)
+
         print("**************************")
-        print("* Error: Такого меню нет *")
+        print("* [1] Игра против бота   *")
+        print("* [2] Игра против игрока *")
+        print("* [3] Выход              *")
+        print("**************************")
 
-    print("**************************")
-    print("* [1] Игра против бота   *")
-    print("* [2] Игра против игрока *")
-    print("* [3] Выход              *")
-    print("**************************")
-
-def Print(t1:Player, t2:Player):
-    Clear()
-    t1.Print()
-    t2.Print()
-    
-
-def PVE():
-    nick = ["Enemy", "Bot", "Your mom", "Pro", "Pro100 Bot"]
-    bot = Player(nick[randint(0, len(nick) - 1)])
-    player = Player(input("Введите ник: "))
-
-    monet = randint(1,2)
-    game = True
-    if monet == 1: player.select = True
-        
-    while game:
-
-        if bot.isEnd or player.isEnd:
-            game = False
-            continue
-
-        bot.select = not(player.select)
-
-        if player.select:
-            
-            player.randomNumber = player.random
-            bot.randomNumber = ""
-
-            Print(bot, player)
-
-            while True:
-                try:
-                    num = int(input("Выберите колоннку(1,2,3): "))
-                except:
-                    print("* Error: Я не знаю что это! *")
-                    num = 9
-
-                if not(num == 1 or num == 2 or num == 3): continue
-                num = num - 1
-                if player.AddNumber(num):
-                    bot.CheckAndRemove(player.randomNumber, num )
-                    
-                    break
-            Print(bot, player)
-            player.select = False
-        else:
-
-            player.randomNumber = ""
-            bot.randomNumber = bot.random
-
-            while True:
-                num = randint(0,2)
-                if bot.AddNumber(num): 
-                    player.CheckAndRemove(bot.randomNumber,num)
-                    break
-            Print(bot, player)
-            player.select = True
-
-        Print(bot, player)
-        sleep(1)
-
-    for timer in range(5,0,-1):
-        Print(bot, player)
-        print("Игра окончена! Выйграл: ", end='')
-
-        if player.score > bot.score: print(player.name)
-        else: print(bot.name)
-
-        print(f"Выход через: {timer}...")
-
-        sleep(1)
-
-def PVP():
-    bot = Player(input("Введите ник первого игрока: "))
-    player = Player(input("Введите ник второго игрока: "))
-
-    monet = randint(1,2)
-    game = True
-    if monet == 1: player.select = True
-        
-    while game:
-
-        if bot.isEnd or player.isEnd:
-            game = False
-            continue
-
-        bot.select = not(player.select)
-
-        if player.select:
-            
-            player.randomNumber = player.random
-            bot.randomNumber = ""
-
-            Print(bot, player)
-
-            while True:
-                try:
-                    num = int(input("Выберите колоннку(1,2,3): "))
-                except:
-                    print("* Error: Я не знаю что это! *")
-                    num = 9
-
-                if not(num == 1 or num == 2 or num == 3): continue
-                num = num - 1
-                if player.AddNumber(num):
-                    bot.CheckAndRemove(player.randomNumber, num )
-                    
-                    break
-            Print(bot, player)
-            player.select = False
-        else:
-
-            player.randomNumber = ""
-            bot.randomNumber = bot.random
-
-            while True:
-                try:
-                    num = int(input("Выберите колоннку(1,2,3): "))
-                except:
-                    print("* Error: Я не знаю что это! *")
-                    num = 9
-
-                if not(num == 1 or num == 2 or num == 3): continue
-                num = num - 1
-                if bot.AddNumber(num):
-                    player.CheckAndRemove(player.randomNumber, num )
-                    break
-            Print(bot, player)
-            player.select = True
-
-        Print(bot, player)
-        sleep(1)
-
-    for timer in range(5,0,-1):
-        Print(bot, player)
-        print("Игра окончена! Выйграл: ", end='')
-
-        if player.score > bot.score: print(player.name)
-        else: print(bot.name)
-
-        print(f"Выход через: {timer}...")
-
-        sleep(1)
-
-while gameLoop:
-
-    if gameSelect == 1:
-        PVE()
-        gameSelect = 0
-    elif gameSelect == 2:
-        PVP()
-        gameSelect = 0
-    elif gameSelect == 3:
-        gameLoop = False
-        gameSelect = 0
-    else:
-        MainMenu(not(gameSelect == 0))
-        gameSelect = int(input("* Ваш выбор: "))
-
-
+        MAIN_MENU_SELECT = Basic.int_input("* Ваш выбор:")
