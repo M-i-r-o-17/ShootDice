@@ -29,7 +29,7 @@
 | **5** |  5 | 20 | 45 | 
 | **6** |  6 | 24 | 54 | 
 
-## GUI Shoot Dice
+## Связанные проекты
 
 [![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=M-i-r-o-17&repo=GuiShootDice)](https://github.com/M-i-r-o-17/GuiShootDice)
 
