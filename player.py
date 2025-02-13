@@ -237,13 +237,13 @@ class Player:
         print(
             f"* [ {self.four}  ][ {self.five}  ][ {self.six}  ] * "
             + f"Curret: {self.curret_number}"
-            + " " * 15
+            + " " * (16 if self.curret_number == "" else 15)
             + "*"
         )
         print(
             f"* [ {self.seven}  ][ {self.eight}  ][ {self.nine}  ] * "
             + f"Your step: {self.select}"
-            + " " * 8
+            + " " * (9 if self.select else 8)
             + "*"
         )
         print("* " + "|" * 44 + " *")
