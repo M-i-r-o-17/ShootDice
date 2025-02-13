@@ -4,7 +4,7 @@ from player import Player
 
 
 class Bot(Player):
-    """Класс реализующий бота для игры"""
+    """Класс реализующий бота для игры, основан на томже классе что и игрок"""
 
     __niknames = ["Enemy", "Bot", "Your mom", "Pro", "Pro100 Bot"]
 
@@ -24,6 +24,11 @@ class Bot(Player):
         self.difficulty = self.__difficulty[difficulty]
 
     def __easy(self, enemy: Player) -> None:
+        """Функция логики для лёгкого уровня сложность. Используются стратегия
+            "Пальцем в небо". Ставим число в случайную точку
+        Args:
+            enemy (Player) : обьект игрока
+        """
 
         while True:
 
@@ -38,6 +43,11 @@ class Bot(Player):
         return None
 
     def __medium(self, enemy) -> None:
+        """Функция логики для среднего уровня сложности. Используются стратегия
+            "40/60". либо думаем, либо ставим точку на угад
+        Args:
+            enemy (Player) : обьект игрока
+        """
 
         step_random = Basic.randint(1, 10)
 
@@ -49,6 +59,10 @@ class Bot(Player):
             self.__hard(enemy)
 
     def __hard(self, enemy: Player) -> None:
+        """Функция логики для сложного уровня сложности. Использует несколько стратегий
+        для постановки кости на поля
+        enemy (Player) : обьект игрока
+        """
 
         # Стратегия 1: Ищим лучший столбец врага и рушим его по возможности
         best_col_enemy = -1
@@ -141,18 +155,11 @@ class Bot(Player):
         return count
 
     def __find_number_col(self, zone=None, exception=[]) -> int:
-        """Функция для нахождения столбца с число
-
-
+        """Функция для нахождения столбца с числом
         Args:
-
             exception : столбцы которые не нужно проверять. Defaults to []
-
-
         Returns:
-
             -1 (int): Нет столбцов, не входящих в исключение, с данным числом
-
             int (int): Номер столбца
         """
 
@@ -175,8 +182,14 @@ class Bot(Player):
 
         return -1
 
-    def __find_free_row(self, coloum) -> int:
-
+    def __find_free_row(self, coloum: int) -> int:
+        """Функция для поиска свободной строки в столбце
+        Args:
+            coloum (int): Столбец в котором ищем строку
+        Returns:
+            -1 (int): Нет свободных строк
+            int (int): Номер строки
+        """
         for row in range(3):
 
             if self.zone[row][coloum] == 0:
@@ -186,7 +199,12 @@ class Bot(Player):
         return -1
 
     def __new_coloum_score(self, coloum) -> int:
-
+        """Функция для перерасчёта стоимости столбца
+        Args:
+            coloum (int): Столбец в котором считаем счёт
+        Returns:
+            (int): Новый счёт
+        """
         new_score_col = 0
 
         if self.zone[1][coloum] != self.zone[2][coloum]:
