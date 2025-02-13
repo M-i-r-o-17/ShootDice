@@ -153,7 +153,7 @@ class Bot(Player):
 
         return count
 
-    def __find_number_col(self, zone=None, exception=[]) -> int:
+    def __find_number_col(self, zone=None, exception=None) -> int:
         """Функция для нахождения столбца с числом
         Args:
             exception : столбцы которые не нужно проверять. Defaults to []
@@ -161,6 +161,7 @@ class Bot(Player):
             -1 (int): Нет столбцов, не входящих в исключение, с данным числом
             int (int): Номер столбца
         """
+        exception = [] if exception is None else exception
 
         if len(exception) >= 3:
 
