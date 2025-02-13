@@ -118,8 +118,7 @@ class Bot(Player):
 
         # Стартегия 3: Рандом)
         if col == -1:
-            self.__easy(enemy)
-            return None
+            col = self.__max_profit_col()
 
         self.add(col)
         enemy.check_and_remove(self.curret_number, col)
@@ -220,6 +219,37 @@ class Bot(Player):
             new_score_col = self.curret_number * 9
 
         return new_score_col
+
+    def __max_profit_col(self) -> int:
+
+        col = -1
+
+        ex = []
+
+        while col == -1:
+
+            maximum = 0
+
+            for coloum in range(3):
+
+                if coloum in ex:
+
+                    continue
+
+                if len(ex) == 3:
+                    return -1
+
+                if maximum < self.__new_coloum_score(coloum):
+
+                    col = coloum
+
+                    maximum = self.__new_coloum_score(coloum)
+
+            if self.__find_free_row(col) != -1:
+                return col
+            else:
+                ex.append(col)
+                col = -1
 
     def step(self, enemy) -> None:
 
