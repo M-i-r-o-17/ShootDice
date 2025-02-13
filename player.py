@@ -1,5 +1,3 @@
-from random import randint
-from time import sleep
 from basic import Basic
 
 
@@ -12,7 +10,6 @@ class Player:
 
         self.zone = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
 
-        self.random_number = 0
         self.curret_number = 0
 
         self.select = False
@@ -22,52 +19,52 @@ class Player:
     @property
     def one(self) -> int:
         """Кость первой ячейки"""
-        return self.zone[0][0]  # 1
+        return self.zone[0][0]
 
     @property
     def two(self) -> int:
         """Кость второй ячейки"""
-        return self.zone[0][1]  # 2
+        return self.zone[0][1]
 
     @property
     def three(self) -> int:
         """Кость третей ячейки"""
-        return self.zone[0][2]  # 3
+        return self.zone[0][2]
 
     @property
     def four(self) -> int:
         """Кость четвертой ячейки"""
-        return self.zone[1][0]  # 4
+        return self.zone[1][0]
 
     @property
     def five(self) -> int:
         """Кость пятой ячейки"""
-        return self.zone[1][1]  # 5
+        return self.zone[1][1]
 
     @property
     def six(self) -> int:
         """Кость шестой ячейки"""
-        return self.zone[2][2]  # 6
+        return self.zone[1][2]
 
     @property
     def seven(self) -> int:
         """Кость седьмой ячейки"""
-        return self.zone[2][0]  # 7
+        return self.zone[2][0]
 
     @property
     def eight(self) -> int:
         """Кость восьмой ячейки"""
-        return self.zone[2][1]  # 8
+        return self.zone[2][1]
 
     @property
     def nine(self) -> int:
         """Кость девятой ячейки"""
-        return self.zone[2][2]  # 9
+        return self.zone[2][2]
 
     @property
     def random(self) -> int:
         """Случайное число от 1 до 6"""
-        return randint(1, 6)  # Случайное число (1-6)
+        return Basic.randint(1, 6)
 
     @property
     def is_end(self) -> bool:
@@ -99,7 +96,7 @@ class Player:
     def score_col(self, coloum: int) -> int:
         """Функция подсчёта конкретной колонуи
 
-        Args:1
+        Args:
             coloum (int): Колонка, чей счёт нужно посчитать
 
         Returns:
@@ -137,8 +134,6 @@ class Player:
             if self.zone[row][coloum] == value:
                 self.zone[row][coloum] = 0
 
-        self.normolized(coloum)
-
         return None
 
     def check_correct(self, coloum: int) -> bool:
@@ -151,14 +146,14 @@ class Player:
             False: Если всё расположенно в парвельной последовательности. Сортировка не требуется
             True:  Если порядок нарушен. Требуется сортировка
         """
+        if (
+            self.zone[0][coloum] == 0
+            and self.zone[1][coloum] == 0
+            and self.zone[2][coloum] == 0
+        ):
+            return False
         if self.is_top_zone:
             if (
-                self.zone[0][coloum] == 0
-                and self.zone[1][coloum] == 0
-                and self.zone[2][coloum] == 0
-            ):
-                return False
-            elif (
                 self.zone[0][coloum] == 0
                 and self.zone[1][coloum] == 0
                 and self.zone[2][coloum] > 0
@@ -180,12 +175,6 @@ class Player:
                 return True
         else:
             if (
-                self.zone[0][coloum] == 0
-                and self.zone[1][coloum] == 0
-                and self.zone[2][coloum] == 0
-            ):
-                return False
-            elif (
                 self.zone[0][coloum] > 0
                 and self.zone[1][coloum] == 0
                 and self.zone[2][coloum] == 0
@@ -215,18 +204,30 @@ class Player:
         while self.check_correct(coloum):
             for i in range(3):
                 if self.is_top_zone:
-                    if i - 1 >= 0 and self.zone[i][coloum] == 0:
-                        self.zone[i][coloum] = self.zone[i - 1][coloum]
-                        self.zone[i - 1][coloum] = 0
+                    if (
+                        i + 1 <= 2
+                        and self.zone[i][coloum] > 0
+                        and self.zone[i + 1][coloum] == 0
+                    ):
+                        self.zone[i + 1][coloum] = self.zone[i][coloum]
+                        self.zone[i][coloum] = 0
                 else:
-                    if i + 1 <= 2 and self.zone[i][coloum] == 0:
-                        self.zone[i][coloum] = self.zone[i + 1][coloum]
-                        self.zone[i + 1][coloum] = 0
+                    if (
+                        i - 1 >= 0
+                        and self.zone[i][coloum] > 0
+                        and self.zone[i - 1][coloum] == 0
+                    ):
+                        self.zone[i - 1][coloum] = self.zone[i][coloum]
+                        self.zone[i][coloum] = 0
 
         return None
 
     def display(self) -> None:
         """Функция отбражения информации о классе в терминале"""
+
+        for i in range(3):
+            self.normolized(i)
+
         print("*" * 48)
         print(
             f"* [ {self.one}  ][ {self.two}  ][ {self.three}  ] * Nick: {self.name[0:15]} "

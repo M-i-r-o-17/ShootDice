@@ -1,4 +1,3 @@
-import os
 from time import sleep
 from player import Player
 from bot import Bot
@@ -35,6 +34,9 @@ def game(p1: Player, p2: Player) -> None:
     if who_first == 1:
         p1.select = True
         p2.select = False
+    else:
+        p1.select = False
+        p2.select = True
 
     p1.is_top_zone = True
     p2.is_top_zone = False
@@ -72,7 +74,7 @@ def game(p1: Player, p2: Player) -> None:
 
 if __name__ == "__main__":
     GAME_LOOP = True
-    MAIN_MENU_SELECT = 0
+    MAIN_MENU_SELECT = -1
     ERRORS = []
 
     while GAME_LOOP:
@@ -86,6 +88,8 @@ if __name__ == "__main__":
         elif MAIN_MENU_SELECT == 3:
             GAME_LOOP = False
             continue
+        elif MAIN_MENU_SELECT == -1:
+            MAIN_MENU_SELECT = 0
         else:
             ERRORS.append("[Error 2] Нет такого пункта меню")
 
@@ -95,10 +99,12 @@ if __name__ == "__main__":
             print("**************************")
             print(error)
 
+        ERRORS.clear()
+
         print("**************************")
         print("* [1] Игра против бота   *")
         print("* [2] Игра против игрока *")
         print("* [3] Выход              *")
         print("**************************")
 
-        MAIN_MENU_SELECT = Basic.int_input("* Ваш выбор:")
+        MAIN_MENU_SELECT = Basic.int_input("* Ваш выбор: ")
