@@ -10,7 +10,7 @@ class Bot(Player):
 
     __difficulty = ["Easy", "Medium", "Hard"]
 
-    def __init__(self, difficulty=2, name=""):
+    def __init__(self, difficulty=0, name=""):
 
         Player.__init__(
             self,

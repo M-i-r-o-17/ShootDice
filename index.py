@@ -7,8 +7,25 @@ from basic import Basic
 def player_vs_bot() -> None:
     """Функция запускающая игру против бота"""
 
+    Basic.clear_console()
+
     player1 = Player(input("Введите ник игрока: "))
-    bot = Bot()
+
+    difficulty = -1
+
+    while difficulty != 0 and difficulty != 1 and difficulty != 2:
+
+        Basic.clear_console()
+
+        print("****** Сложность *********")
+        print("* [1] Легкий уровень     *")
+        print("* [2] Средний уровень    *")
+        print("* [3] Сложный уровень    *")
+        print("**************************")
+
+        difficulty = Basic.int_input("* Ваш выбор: ") - 1
+
+    bot = Bot(difficulty)
 
     return game(bot, player1)
 
